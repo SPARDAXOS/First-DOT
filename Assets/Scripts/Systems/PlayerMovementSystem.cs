@@ -30,9 +30,16 @@ public partial struct PlayerMovementSystem : ISystem {
 
         foreach ((RefRO<PlayerMovementData> data, RefRW<LocalTransform> transform) in SystemAPI.Query<RefRO<PlayerMovementData>, RefRW<LocalTransform>>()) {
 
-
-
             transform.ValueRW = transform.ValueRW.Translate(new float3(data.ValueRO.currentInput.x, data.ValueRO.currentInput.y, 0.0f) * data.ValueRO.speed * SystemAPI.Time.DeltaTime);
+
+            float3 distance = (data.ValueRO.rotationTarget - transform.ValueRO.Position);
+            Vector2 direction = new Vector2(distance.x, distance.y);
+            direction.Normalize();
+
+            Vector2 forwardVector = new Vector2(transform.ValueRO.Forward().x, transform.ValueRO.Forward().y);
+
+            transform.ValueRW = transform.ValueRW.RotateZ(Vector2.Angle(direction, forwardVector));
+            
             Debug.Log("MovementUpdated!");
         }
 

@@ -26,10 +26,14 @@ public partial struct PlayerInputSystem : ISystem {
 
 
     private void CheckRotationInput(ref SystemState state) {
+        //TODO: Can be optimized the same way as in movement.
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
-        foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>()) {
-            data.ValueRW.mousePositionTempDeleteMe = mousePosition;
-        }
+        mousePosition.x *= -1;
+        mousePosition.y *= -1;
+
+
+        foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>())
+            data.ValueRW.rotationTarget = mousePosition;
     }
 
     private void CheckMovementInput(ref SystemState state) {

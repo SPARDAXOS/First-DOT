@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -9,8 +10,7 @@ using UnityEngine;
 public struct PlayerMovementData : IComponentData {
     public float speed;
     public Vector2 currentInput;
-    public Quaternion targetRotation;
-    public Vector3 mousePositionTempDeleteMe;
+    public float3 rotationTarget;
 }
 
 
@@ -18,8 +18,9 @@ public class PlayerMovementAuthoring : MonoBehaviour {
 
     public float speed = 1.0f;
     Vector2 currentInput = Vector2.zero;
-    Quaternion targetRotation;
 
+
+    //Not called
     public void UpdateMovement(Vector2 input) {
         currentInput = input;
     }
@@ -33,8 +34,7 @@ public class PlayerMovementAuthoring : MonoBehaviour {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<PlayerMovementData>(entity, new PlayerMovementData {
                 speed = authoring.speed,
-                currentInput = authoring.currentInput,
-                targetRotation = authoring.targetRotation
+                currentInput = authoring.currentInput
             });
 
 
