@@ -7,11 +7,12 @@ using Unity.Mathematics;
 
 public partial struct PlayerInputSystem : ISystem {
 
-
-
+    float lastHorizontalInput;
+    float lastVerticalInput;
 
 
     void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<PlayerMovementData>();
         Debug.Log("On Create!");
     }
     void OnDestroy(ref SystemState state) {
@@ -19,6 +20,19 @@ public partial struct PlayerInputSystem : ISystem {
     }
     void OnUpdate(ref SystemState state) {
 
+        CheckMovementInput(ref state);
+        CheckRotationInput(ref state);
+    }
+
+
+    private void CheckRotationInput(ref SystemState state) {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
+        foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>()) {
+            data.ValueRW.mousePositionTempDeleteMe = mousePosition;
+        }
+    }
+
+    private void CheckMovementInput(ref SystemState state) {
         float horizontalInput = 0.0f;
         if (Input.GetKey(KeyCode.A))
             horizontalInput -= 1.0f;
@@ -26,22 +40,19 @@ public partial struct PlayerInputSystem : ISystem {
             horizontalInput += 1.0f;
 
         float verticalInput = 0.0f;
-        if (Input.GetKey(KeyCode.S)) 
+        if (Input.GetKey(KeyCode.S))
             verticalInput -= 1.0f;
-        if (Input.GetKey(KeyCode.W)) 
+        if (Input.GetKey(KeyCode.W))
             verticalInput += 1.0f;
 
+        if (lastHorizontalInput == horizontalInput && lastVerticalInput == verticalInput)
+            return;
 
-        //foreach (RefRW<LocalTransform> local in SystemAPI.Query<RefRW<LocalTransform>>()) {
-        //    float3 position = new float3(horizontalInput, 0.0f, 0.0f);
-        //    local.ValueRW = local.ValueRO.Translate(position);
-        //}
-
-
+        lastHorizontalInput = horizontalInput;
+        lastVerticalInput = verticalInput;
 
         foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>()) {
             data.ValueRW.currentInput = new Vector2(horizontalInput, verticalInput);
         }
-
     }
 }

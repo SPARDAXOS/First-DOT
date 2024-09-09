@@ -10,6 +10,8 @@ public partial struct PlayerMovementSystem : ISystem {
 
 
     void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<PlayerMovementData>();
+
         Debug.Log("On Create! - Movement");
     }
     void OnDestroy(ref SystemState state) {
