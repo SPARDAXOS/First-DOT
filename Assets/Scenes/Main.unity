@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &443957340
+--- !u!1 &278879862
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,8 +130,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 443957342}
-  - component: {fileID: 443957341}
+  - component: {fileID: 278879864}
+  - component: {fileID: 278879863}
   m_Layer: 0
   m_Name: EntitiesSubscene
   m_TagString: Untagged
@@ -139,34 +139,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &443957341
+--- !u!114 &278879863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 443957340}
+  m_GameObject: {fileID: 278879862}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _SceneAsset: {fileID: 102900000, guid: e79a3c3973b95174ea13736043490475, type: 3}
-  _HierarchyColor: {r: 0.09919691, g: 1, b: 0, a: 1}
+  _SceneAsset: {fileID: 102900000, guid: 6fa8f8e8a5984d84fa9e28d72aecc6a4, type: 3}
+  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   AutoLoadScene: 1
   _SceneGUID:
     Value:
-      x: 2479073662
-      y: 1192598327
-      z: 104280494
-      w: 1463850036
---- !u!4 &443957342
+      x: 2391771894
+      y: 1221888346
+      z: 2105731503
+      w: 1248644770
+--- !u!4 &278879864
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 443957340}
+  m_GameObject: {fileID: 278879862}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -317,4 +317,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 634145855}
-  - {fileID: 443957342}
+  - {fileID: 278879864}

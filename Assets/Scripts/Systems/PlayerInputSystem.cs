@@ -4,39 +4,52 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Burst;
+using Unity.Jobs;
+
+
+
+
 
 public partial struct PlayerInputSystem : ISystem {
 
-    float lastHorizontalInput;
-    float lastVerticalInput;
+
+    public struct InputData {
+        public float currentHorizontalInput;
+        public float currentVerticalInput;
+        public float lastHorizontalInput;
+        public float lastVerticalInput;
+
+        public Vector3 currentMousePosition;
+        public Vector3 lastMousePosition;
+    }
+
+    public InputData currentData;
 
 
     void OnCreate(ref SystemState state) {
-        state.RequireForUpdate<PlayerMovementData>();
-        Debug.Log("On Create!");
+        state.RequireForUpdate<PlayerInputData>();
     }
     void OnDestroy(ref SystemState state) {
-        Debug.Log("On Destroy!");
+
     }
     void OnUpdate(ref SystemState state) {
-
-        CheckMovementInput(ref state);
-        CheckRotationInput(ref state);
+        UpdateMovementInput(ref state);
+        UpdateRotationInput(ref state);
+        RunUpdateDataJob(ref state);
     }
 
+    [BurstCompile]
+    private void UpdateRotationInput(ref SystemState state) {
+        Vector3 position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
+        position.x *= -1;
+        position.y *= -1;
 
-    private void CheckRotationInput(ref SystemState state) {
-        //TODO: Can be optimized the same way as in movement.
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
-        mousePosition.x *= -1;
-        mousePosition.y *= -1;
-
-
-        foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>())
-            data.ValueRW.rotationTarget = mousePosition;
+        currentData.currentMousePosition = position;
     }
 
-    private void CheckMovementInput(ref SystemState state) {
+    [BurstCompile]
+    private void UpdateMovementInput(ref SystemState state) {
         float horizontalInput = 0.0f;
         if (Input.GetKey(KeyCode.A))
             horizontalInput -= 1.0f;
@@ -49,14 +62,46 @@ public partial struct PlayerInputSystem : ISystem {
         if (Input.GetKey(KeyCode.W))
             verticalInput += 1.0f;
 
-        if (lastHorizontalInput == horizontalInput && lastVerticalInput == verticalInput)
+        currentData.currentHorizontalInput = horizontalInput;
+        currentData.currentVerticalInput = verticalInput;
+    }
+
+    [BurstCompile]
+    private void RunUpdateDataJob(ref SystemState state) {
+        bool condition1 = (currentData.currentHorizontalInput != currentData.lastHorizontalInput || currentData.currentVerticalInput != currentData.lastVerticalInput);
+        bool condition2 = (currentData.currentMousePosition != currentData.lastMousePosition);
+
+        if (!condition1 && !condition2)
             return;
 
-        lastHorizontalInput = horizontalInput;
-        lastVerticalInput = verticalInput;
+        if (condition1) {
+            currentData.lastHorizontalInput = currentData.currentHorizontalInput;
+            currentData.lastVerticalInput = currentData.currentVerticalInput;
+        }
+        if (condition2) {
+            currentData.lastMousePosition = currentData.currentMousePosition;
+        }
 
-        foreach (RefRW<PlayerMovementData> data in SystemAPI.Query<RefRW<PlayerMovementData>>()) {
-            data.ValueRW.currentInput = new Vector2(horizontalInput, verticalInput);
+        UpdatePlayerDataJob Update = new UpdatePlayerDataJob { targetDataRef = currentData };
+        Update.Schedule();
+    }
+
+
+    [BurstCompile]
+    [WithAll(typeof(PlayerTag))]
+    public partial struct UpdatePlayerDataJob : IJobEntity {
+
+        public InputData targetDataRef;
+
+        [BurstCompile]
+        private void UpdatePlayerData(ref PlayerInputData data) {
+            data.currentInput = new Vector2(targetDataRef.currentHorizontalInput, targetDataRef.currentVerticalInput);
+            data.rotationTarget = targetDataRef.currentMousePosition;
+            Debug.Log("Input system updated!");
+        }
+
+        public void Execute(ref PlayerInputData data) {
+            UpdatePlayerData(ref data);
         }
     }
 }
