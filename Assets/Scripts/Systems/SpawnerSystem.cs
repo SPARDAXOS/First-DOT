@@ -59,15 +59,17 @@ public partial class SpawnerSystem : SystemBase {
         if (currentlyActiveEnemies == targetConfig.maximumActiveEnemies || currentlyActiveEnemies == entities.Length)
             return;
 
-        if (currentTimer < targetConfig.spawnDelay)
+        if (currentTimer > 0.0f) {
+            currentTimer -= SystemAPI.Time.DeltaTime;
             return;
+        }
 
 
 
 
 
         //On Success.
-        currentTimer = 0.0f;
+        currentTimer = targetConfig.spawnDelay;
     }
 
 
