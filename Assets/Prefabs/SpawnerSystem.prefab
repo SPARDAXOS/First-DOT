@@ -45,4 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4001099566920129647, guid: f798b147a020e124ea7d0155e9963873, type: 3}
+  scaleMax: 3
+  scaleMin: 1
   poolSize: 12
+  maximumActiveEnemies: 5
+  spawnDelay: 5

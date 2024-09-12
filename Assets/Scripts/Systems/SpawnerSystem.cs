@@ -48,7 +48,7 @@ public partial class SpawnerSystem : SystemBase {
             SystemAPI.SetComponent<LocalTransform>(entity, new LocalTransform {
                 Position = new Vector3(10, 0, 0),
                 Rotation = quaternion.identity,
-                Scale = 1.0f
+                Scale = UnityEngine.Random.Range(targetConfig.scaleMin, targetConfig.scaleMax)
 
             });
         }

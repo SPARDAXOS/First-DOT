@@ -6,6 +6,8 @@ using UnityEngine;
 public class SpawnerSystemAuthoring : MonoBehaviour {
 
     public GameObject enemyPrefab;
+    public float scaleMax;
+    public float scaleMin;
     public int poolSize;
     public int maximumActiveEnemies;
     public float spawnDelay;
@@ -16,6 +18,8 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
 
             AddComponent(entity, new SpawnerSystemConfig {
                 enemyEntity = GetEntity(authoring.enemyPrefab, TransformUsageFlags.Dynamic),
+                scaleMax = authoring.scaleMax,
+                scaleMin = authoring.scaleMin,
                 poolSize = authoring.poolSize,
                 maximumActiveEnemies = authoring.maximumActiveEnemies,
                 spawnDelay = authoring.spawnDelay
@@ -28,6 +32,8 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
 
 public struct SpawnerSystemConfig : IComponentData {
     public Entity enemyEntity;
+    public float scaleMax;
+    public float scaleMin;
     public int poolSize;
     public int maximumActiveEnemies;
     public float spawnDelay;

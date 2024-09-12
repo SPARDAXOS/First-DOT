@@ -28,7 +28,7 @@ public partial struct PlayerMovementSystem : ISystem {
 
 
 
-        foreach (PlayerMovementAspect aspect in SystemAPI.Query<PlayerMovementAspect>().WithAll<PlayerTag>()) {
+        foreach (PlayerDataAspect aspect in SystemAPI.Query<PlayerDataAspect>().WithAll<PlayerTag>()) {
 
             aspect.transform.ValueRW = aspect.transform.ValueRW.Translate(new float3(aspect.input.ValueRO.currentInput.x, aspect.input.ValueRO.currentInput.y, 0.0f) * aspect.data.ValueRO.speed * SystemAPI.Time.DeltaTime);
 
