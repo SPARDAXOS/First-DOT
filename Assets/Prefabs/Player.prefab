@@ -140,10 +140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7c308aeea9df6344b075bb515fcc368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6725820616651065674, guid: 3e9092bffb447ff45bd61a6cf864cd85, type: 3}
+  projectilePrefab: {fileID: 6725820616651065674, guid: 3e9092bffb447ff45bd61a6cf864cd85, type: 3}
   poolSize: 20
-  fireDelay: 0.5
-  spawnPositionOffset: 2
+  fireDelay: 0.1
+  spawnPositionOffset: 1.5
 --- !u!1 &8240350509632674026
 GameObject:
   m_ObjectHideFlags: 0

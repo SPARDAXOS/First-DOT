@@ -22,6 +22,7 @@ public partial class PlayerShootingSystem : SystemBase {
         RequireForUpdate<PlayerTag>();
         RequireForUpdate<PlayerShootingConfig>();
 
+
         currentTimer = 0.0f;
         shootingCommands = new List<PlayerDataAspect>();
         Debug.Log("On Create! - Player Shooting");
@@ -35,6 +36,7 @@ public partial class PlayerShootingSystem : SystemBase {
     }
     protected override void OnUpdate() {
 
+        //TODO: To func and update all others like this to retrieve the relevant data only when needed
         targetPlayerShootingConfig = SystemAPI.GetSingleton<PlayerShootingConfig>();
 
         if (!entities.IsCreated)
@@ -68,7 +70,7 @@ public partial class PlayerShootingSystem : SystemBase {
     [BurstCompile]
     private void SetupPool() {
         entities = new NativeArray<Entity>(targetPlayerShootingConfig.poolSize, Allocator.Persistent);
-        EntityManager.Instantiate(targetPlayerShootingConfig.bulletEntity, entities);
+        EntityManager.Instantiate(targetPlayerShootingConfig.projectileEntity, entities);
 
         foreach (var entity in entities) {
             SystemAPI.SetComponent<LocalTransform>(entity, new LocalTransform {
@@ -82,6 +84,7 @@ public partial class PlayerShootingSystem : SystemBase {
         }
     }
 
+
     [BurstCompile]
     private void SpawnBullet(PlayerDataAspect aspect) {
 
@@ -94,12 +97,15 @@ public partial class PlayerShootingSystem : SystemBase {
         foreach (var entity in entities) {
             if (!EntityManager.IsEnabled(entity)) {
                 RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
-                transform.ValueRW.Position = aspect.transform.ValueRO.Position; //then offset it by player right * offset+
+                transform.ValueRW.Position = aspect.transform.ValueRO.Position + (aspect.transform.ValueRO.Right() * targetPlayerShootingConfig.spawnPositionOffset);
                 targetEntity = entity;
                 validProjectileFound = true;
 
+                RefRW<PlayerProjectileData> data = SystemAPI.GetComponentRW<PlayerProjectileData>(entity);
+                if (data.IsValid)
+                    data.ValueRW.movementDirection = aspect.transform.ValueRO.Right();
+
                 currentTimer = targetPlayerShootingConfig.fireDelay;
-                Debug.Log("Player Bullet Spawned!");
                 break;
             }
         }

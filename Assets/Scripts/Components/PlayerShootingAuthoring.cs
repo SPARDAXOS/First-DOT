@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class PlayerShootingAuthoring : MonoBehaviour {
 
-    public GameObject bulletPrefab;
+    public GameObject projectilePrefab;
     public int poolSize;
     public float fireDelay;
     public float spawnPositionOffset;
+
 
     public class Baker : Baker<PlayerShootingAuthoring> {
         public override void Bake(PlayerShootingAuthoring authoring) {
             Entity entity = GetEntity(TransformUsageFlags.None);
 
             AddComponent(entity, new PlayerShootingConfig {
-                bulletEntity = GetEntity(authoring.bulletPrefab, TransformUsageFlags.Dynamic),
+                projectileEntity = GetEntity(authoring.projectilePrefab, TransformUsageFlags.Dynamic),
                 poolSize = authoring.poolSize,
                 fireDelay = authoring.fireDelay,
-                spawnPositionOffset = authoring.spawnPositionOffset
+                spawnPositionOffset = authoring.spawnPositionOffset,
             });
         }
     }
@@ -27,7 +28,7 @@ public class PlayerShootingAuthoring : MonoBehaviour {
 }
 
 public struct PlayerShootingConfig : IComponentData {
-    public Entity bulletEntity;
+    public Entity projectileEntity;
     public int poolSize;
     public float fireDelay;
     public float spawnPositionOffset;

@@ -14,6 +14,7 @@ public partial struct EnemyControllerSystem : ISystem {
 
     void OnCreate(ref SystemState state) {
         state.RequireForUpdate<EnemyData>();
+        state.RequireForUpdate<PlayerTag>();
 
         Debug.Log("On Create! - EnemyController");
     }
