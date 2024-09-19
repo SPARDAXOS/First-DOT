@@ -8,6 +8,7 @@ public class PlayerProjectileDataAuthoring : MonoBehaviour {
 
     public float projectileSpeed = 2.0f;
     public float projectileDamage = 5.0f;
+    public float physicsShapeRadius = 2.0f;
 
     public class Baker : Baker<PlayerProjectileDataAuthoring> {
         public override void Bake(PlayerProjectileDataAuthoring authoring) {
@@ -17,6 +18,8 @@ public class PlayerProjectileDataAuthoring : MonoBehaviour {
                 projectileSpeed = authoring.projectileSpeed,
                 projectileDamage = authoring.projectileDamage,
             });
+
+            
         }
     }
 }

@@ -93,7 +93,7 @@ public partial struct PlayerInputSystem : ISystem {
             currentData.lastLeftMouseClicked = currentData.currentLeftMouseClicked;
         }
 
-        UpdatePlayerDataJob Update = new UpdatePlayerDataJob { targetDataRef = currentData };
+        UpdatePlayerDataJob Update = new UpdatePlayerDataJob { targetData = currentData };
         Update.Schedule();
     }
 
@@ -102,13 +102,13 @@ public partial struct PlayerInputSystem : ISystem {
     [WithAll(typeof(PlayerTag))]
     public partial struct UpdatePlayerDataJob : IJobEntity {
 
-        public InputData targetDataRef;
+        public InputData targetData;
 
         [BurstCompile]
         private void UpdatePlayerData(ref PlayerInputData data) {
-            data.currentInput = new Vector2(targetDataRef.currentHorizontalInput, targetDataRef.currentVerticalInput);
-            data.rotationTarget = targetDataRef.currentMousePosition;
-            data.isShooting = targetDataRef.currentLeftMouseClicked;
+            data.currentInput = new Vector2(targetData.currentHorizontalInput, targetData.currentVerticalInput);
+            data.rotationTarget = targetData.currentMousePosition;
+            data.isShooting = targetData.currentLeftMouseClicked;
             Debug.Log("Input system updated!");
         }
 

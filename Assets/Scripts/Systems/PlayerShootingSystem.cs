@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst;
@@ -6,6 +7,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 
 [BurstCompile]
@@ -14,7 +16,7 @@ public partial class PlayerShootingSystem : SystemBase {
     private NativeArray<Entity> entities;
     private PlayerShootingConfig targetPlayerShootingConfig;
 
-    private List<PlayerDataAspect> shootingCommands;
+
     private float currentTimer;
 
 
@@ -24,7 +26,6 @@ public partial class PlayerShootingSystem : SystemBase {
 
 
         currentTimer = 0.0f;
-        shootingCommands = new List<PlayerDataAspect>();
         Debug.Log("On Create! - Player Shooting");
     }
     protected override void OnDestroy() {
@@ -45,26 +46,22 @@ public partial class PlayerShootingSystem : SystemBase {
             UpdateShootingTimer();
 
             //TODO: to func
+
+            EntityCommandBuffer buffer = new EntityCommandBuffer(WorldUpdateAllocator);
             foreach (PlayerDataAspect aspect in SystemAPI.Query<PlayerDataAspect>().WithAll<PlayerTag>()) {
-                if (ValidateAction(aspect))
-                    shootingCommands.Add(aspect);
+                if (ValidateAction(aspect)) {
+                    Entity targetProjectile = SpawnBullet(aspect);
+                    if (EntityManager.Exists(targetProjectile))
+                        buffer.SetEnabled(targetProjectile, true);
+
+                }
             }
 
-            PoolShootingCommands();
+            buffer.Playback(EntityManager);
         }
     }
 
 
-    [BurstCompile]
-    private void PoolShootingCommands() {
-        if (shootingCommands.Count == 0)
-            return;
-
-        foreach (var command in shootingCommands)
-            SpawnBullet(command);
-
-        shootingCommands.Clear();
-    }
 
 
     [BurstCompile]
@@ -86,32 +83,26 @@ public partial class PlayerShootingSystem : SystemBase {
 
 
     [BurstCompile]
-    private void SpawnBullet(PlayerDataAspect aspect) {
-
+    private Entity SpawnBullet(PlayerDataAspect aspect) {
         if (currentTimer > 0.0f)
-            return;
+            return Entity.Null;
 
-        bool validProjectileFound = false;
-        Entity targetEntity = new Entity();
-        
+
         foreach (var entity in entities) {
             if (!EntityManager.IsEnabled(entity)) {
                 RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
                 transform.ValueRW.Position = aspect.transform.ValueRO.Position + (aspect.transform.ValueRO.Right() * targetPlayerShootingConfig.spawnPositionOffset);
-                targetEntity = entity;
-                validProjectileFound = true;
 
                 RefRW<PlayerProjectileData> data = SystemAPI.GetComponentRW<PlayerProjectileData>(entity);
                 if (data.IsValid)
                     data.ValueRW.movementDirection = aspect.transform.ValueRO.Right();
 
                 currentTimer = targetPlayerShootingConfig.fireDelay;
-                break;
+                return entity;
             }
         }
-        
-        if (validProjectileFound)
-            EntityManager.SetEnabled(targetEntity, true);
+
+        return Entity.Null;
     }
 
     [BurstCompile]

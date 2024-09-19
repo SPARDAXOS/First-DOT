@@ -50,7 +50,7 @@ MonoBehaviour:
   scaleMin: 2
   poolSize: 12
   maximumActiveEnemies: 5
-  spawnDelay: 5
+  spawnDelay: 1
   spawnPositionOffset: 5
 --- !u!114 &7878100804704296663
 MonoBehaviour:

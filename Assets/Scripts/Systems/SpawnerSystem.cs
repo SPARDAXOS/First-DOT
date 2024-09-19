@@ -43,8 +43,8 @@ public partial class SpawnerSystem : SystemBase {
     }
 
 
-    public void NotifyDispawn() { 
-        
+    public void NotifyDispawn() {
+        currentlyActiveEnemies--;
     }
 
     [BurstCompile]
