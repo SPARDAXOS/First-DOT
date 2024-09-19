@@ -25,4 +25,6 @@ public class EnemyDataAuthoring : MonoBehaviour {
 public struct EnemyData : IComponentData {
     public float currentHealth;
     public float speed;
+
+
 }

@@ -6,7 +6,10 @@ using UnityEngine;
 
 public readonly partial struct EnemyDataAspect : IAspect {
 
-    public readonly RefRO<EnemyData> data;
+    public readonly Entity entity;
+    public readonly RefRW<EnemyData> data;
     public readonly RefRW<LocalTransform> transform;
+
+
 
 }

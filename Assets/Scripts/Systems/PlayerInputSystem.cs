@@ -22,6 +22,9 @@ public partial struct PlayerInputSystem : ISystem {
 
         public Vector3 currentMousePosition;
         public Vector3 lastMousePosition;
+
+        public bool currentLeftMouseClicked;
+        public bool lastLeftMouseClicked;
     }
 
     public InputData currentData;
@@ -36,15 +39,14 @@ public partial struct PlayerInputSystem : ISystem {
     void OnUpdate(ref SystemState state) {
         UpdateMovementInput(ref state);
         UpdateRotationInput(ref state);
+        UpdateActionInput(ref state);
         RunUpdateDataJob(ref state);
     }
+
 
     [BurstCompile]
     private void UpdateRotationInput(ref SystemState state) {
         Vector3 position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
-        position.x *= -1;
-        position.y *= -1;
-
         currentData.currentMousePosition = position;
     }
 
@@ -67,11 +69,17 @@ public partial struct PlayerInputSystem : ISystem {
     }
 
     [BurstCompile]
+    private void UpdateActionInput(ref SystemState state) {
+        currentData.currentLeftMouseClicked = Input.GetKey(KeyCode.Mouse0);
+    }
+
+    [BurstCompile]
     private void RunUpdateDataJob(ref SystemState state) {
         bool condition1 = (currentData.currentHorizontalInput != currentData.lastHorizontalInput || currentData.currentVerticalInput != currentData.lastVerticalInput);
         bool condition2 = (currentData.currentMousePosition != currentData.lastMousePosition);
+        bool condition3 = (currentData.currentLeftMouseClicked != currentData.lastLeftMouseClicked);
 
-        if (!condition1 && !condition2)
+        if (!condition1 && !condition2 && !condition3)
             return;
 
         if (condition1) {
@@ -80,6 +88,9 @@ public partial struct PlayerInputSystem : ISystem {
         }
         if (condition2) {
             currentData.lastMousePosition = currentData.currentMousePosition;
+        }
+        if (condition3) {
+            currentData.lastLeftMouseClicked = currentData.currentLeftMouseClicked;
         }
 
         UpdatePlayerDataJob Update = new UpdatePlayerDataJob { targetDataRef = currentData };
@@ -97,6 +108,7 @@ public partial struct PlayerInputSystem : ISystem {
         private void UpdatePlayerData(ref PlayerInputData data) {
             data.currentInput = new Vector2(targetDataRef.currentHorizontalInput, targetDataRef.currentVerticalInput);
             data.rotationTarget = targetDataRef.currentMousePosition;
+            data.isShooting = targetDataRef.currentLeftMouseClicked;
             Debug.Log("Input system updated!");
         }
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4315121719613124809}
   - component: {fileID: 3118889563280482339}
+  - component: {fileID: 7878100804704296663}
   m_Layer: 0
   m_Name: SpawnerSystem
   m_TagString: Untagged
@@ -50,3 +51,16 @@ MonoBehaviour:
   poolSize: 12
   maximumActiveEnemies: 5
   spawnDelay: 5
+  spawnPositionOffset: 5
+--- !u!114 &7878100804704296663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3895089938436967169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a6829c61e1a6a4fae3ddaa8ada2067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

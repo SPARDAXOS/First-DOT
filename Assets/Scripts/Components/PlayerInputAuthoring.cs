@@ -10,6 +10,7 @@ using UnityEngine;
 public struct PlayerInputData : IComponentData {
     public Vector2 currentInput;
     public float3 rotationTarget;
+    public bool isShooting;
 }
 
 

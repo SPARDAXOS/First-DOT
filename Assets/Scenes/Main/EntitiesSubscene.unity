@@ -189,7 +189,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3895089938436967169, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
       propertyPath: m_Name
-      value: SpawnerSystem
+      value: SpawnerSystemData
       objectReference: {fileID: 0}
     - target: {fileID: 4315121719613124809, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
       propertyPath: m_LocalPosition.x

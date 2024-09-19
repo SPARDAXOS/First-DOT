@@ -30,21 +30,32 @@ public partial struct EnemyControllerSystem : ISystem {
             return;
         }
 
+        
+
         playerTransform = SystemAPI.GetComponentRO<LocalTransform>(playerEntity);
 
         foreach (EnemyDataAspect enemy in SystemAPI.Query<EnemyDataAspect>()) {
+            if (!state.EntityManager.IsEnabled(enemy.entity))
+                continue;
+
             float3 playerDirection = playerTransform.ValueRO.Position - enemy.transform.ValueRO.Position;
             math.normalize(playerDirection);
 
             float3 currentPosition = enemy.transform.ValueRW.Position;
-            enemy.transform.ValueRW.Position = currentPosition + playerDirection * enemy.data.ValueRO.speed * SystemAPI.Time.DeltaTime;
+            enemy.transform.ValueRW.Position = currentPosition + (playerDirection * enemy.data.ValueRO.speed * SystemAPI.Time.DeltaTime);
         }
 
         Debug.Log("On Update! - EnemyController");
     }
 
 
+    private void NotifySpawnerDispawn() {
+        SpawnerSystem system = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<SpawnerSystem>();
+        if (system == null)
+            return;
 
+        system.NotifyDispawn();
+    }
     private void QueryPlayerEntity(ref SystemState state) {
         if (playerEntityQueried)
             return;
@@ -57,5 +68,4 @@ public partial struct EnemyControllerSystem : ISystem {
 
         playerEntityQueried = true;
     }
-
 }

@@ -11,6 +11,7 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
     public int poolSize;
     public int maximumActiveEnemies;
     public float spawnDelay;
+    public float spawnPositionOffset;
 
     public class Baker : Baker<SpawnerSystemAuthoring> {
         public override void Bake(SpawnerSystemAuthoring authoring) {
@@ -22,7 +23,8 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
                 scaleMin = authoring.scaleMin,
                 poolSize = authoring.poolSize,
                 maximumActiveEnemies = authoring.maximumActiveEnemies,
-                spawnDelay = authoring.spawnDelay
+                spawnDelay = authoring.spawnDelay,
+                spawnPositionOffset = authoring.spawnPositionOffset
             });
         }
     }
@@ -37,4 +39,5 @@ public struct SpawnerSystemConfig : IComponentData {
     public int poolSize;
     public int maximumActiveEnemies;
     public float spawnDelay;
+    public float spawnPositionOffset;
 }

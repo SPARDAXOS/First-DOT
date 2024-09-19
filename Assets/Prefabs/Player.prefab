@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5283031864610536346}
   - component: {fileID: 2105078835868484865}
+  - component: {fileID: 916912716910330046}
   - component: {fileID: 970850116556632023}
   - component: {fileID: 3417994579465172308}
-  - component: {fileID: 916912716910330046}
+  - component: {fileID: 1474587696037886430}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -88,6 +89,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &916912716910330046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3790426181659598214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a26af7812cb14b34da0afb9ba7fe285d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &970850116556632023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b054cb38515af84382bd3e29ee58cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &916912716910330046
+--- !u!114 &1474587696037886430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,9 +137,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3790426181659598214}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26af7812cb14b34da0afb9ba7fe285d, type: 3}
+  m_Script: {fileID: 11500000, guid: b7c308aeea9df6344b075bb515fcc368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 6725820616651065674, guid: 3e9092bffb447ff45bd61a6cf864cd85, type: 3}
+  poolSize: 20
+  fireDelay: 0.5
+  spawnPositionOffset: 2
 --- !u!1 &8240350509632674026
 GameObject:
   m_ObjectHideFlags: 0
