@@ -9,7 +9,6 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
     public float scaleMax;
     public float scaleMin;
     public int poolSize;
-    public int maximumActiveEnemies;
     public float spawnDelay;
     public float spawnPositionOffset;
 
@@ -22,7 +21,6 @@ public class SpawnerSystemAuthoring : MonoBehaviour {
                 scaleMax = authoring.scaleMax,
                 scaleMin = authoring.scaleMin,
                 poolSize = authoring.poolSize,
-                maximumActiveEnemies = authoring.maximumActiveEnemies,
                 spawnDelay = authoring.spawnDelay,
                 spawnPositionOffset = authoring.spawnPositionOffset
             });
@@ -37,7 +35,7 @@ public struct SpawnerSystemConfig : IComponentData {
     public float scaleMax;
     public float scaleMin;
     public int poolSize;
-    public int maximumActiveEnemies;
+
     public float spawnDelay;
     public float spawnPositionOffset;
 }

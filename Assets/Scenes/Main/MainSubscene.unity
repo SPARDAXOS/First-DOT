@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &121907543
+--- !u!1001 &468188373
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -179,7 +179,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 164de24abef3f4e47b06bd2130bb317a, type: 3}
---- !u!1001 &2822920747645663960
+--- !u!1001 &732444172
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -187,21 +187,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3118889563280482339, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
-      propertyPath: poolSize
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 3118889563280482339, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
-      propertyPath: spawnDelay
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3118889563280482339, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
-      propertyPath: maximumActiveEnemies
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 3895089938436967169, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
       propertyPath: m_Name
-      value: SpawnerSystemData
+      value: SpawnerSystem
       objectReference: {fileID: 0}
     - target: {fileID: 4315121719613124809, guid: a4683385dc9753c4fa42aa4e274acd19, type: 3}
       propertyPath: m_LocalPosition.x
@@ -252,5 +240,5 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 121907543}
-  - {fileID: 2822920747645663960}
+  - {fileID: 468188373}
+  - {fileID: 732444172}

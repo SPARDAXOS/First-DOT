@@ -16,10 +16,6 @@ public struct BoundsData : IComponentData {
 }
 
 public class BoundsDataAuthoring : MonoBehaviour {
-
-
-
-
     private class Baker : Baker<BoundsDataAuthoring> {
         public override void Bake(BoundsDataAuthoring authoring) {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);

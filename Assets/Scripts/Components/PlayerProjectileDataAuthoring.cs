@@ -18,8 +18,6 @@ public class PlayerProjectileDataAuthoring : MonoBehaviour {
                 projectileSpeed = authoring.projectileSpeed,
                 projectileDamage = authoring.projectileDamage,
             });
-
-            
         }
     }
 }

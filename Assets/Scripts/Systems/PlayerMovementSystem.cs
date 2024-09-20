@@ -1,24 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+[BurstCompile]
 public partial struct PlayerMovementSystem : ISystem {
 
     public BoundsData targetBoundsData;
     private float3 lastRotationTarget;
 
+    [BurstCompile]
     void OnCreate(ref SystemState state) {
         state.RequireForUpdate<PlayerInputData>();
         state.RequireForUpdate<BoundsData>();
 
         Debug.Log("On Create! - Movement");
     }
+
+    [BurstCompile]
     void OnDestroy(ref SystemState state) {
         Debug.Log("On Destroy! - Movement");
     }
+
+    [BurstCompile]
     void OnUpdate(ref SystemState state) {
 
         targetBoundsData = SystemAPI.GetSingleton<BoundsData>();
@@ -32,12 +39,15 @@ public partial struct PlayerMovementSystem : ISystem {
         }
     }
 
+    [BurstCompile]
     private bool ValidateMovementInput(ref SystemState state, PlayerDataAspect aspect) {
         if (aspect.input.ValueRO.currentInput.x == 0 && aspect.input.ValueRO.currentInput.y == 0)
             return false;
 
         return true;
     }
+
+    [BurstCompile]
     private bool ValidateRotationInput(ref SystemState state, PlayerDataAspect aspect) {
         if (aspect.input.ValueRO.rotationTarget.x == lastRotationTarget.x &&
             aspect.input.ValueRO.rotationTarget.y == lastRotationTarget.y &&
@@ -49,6 +59,7 @@ public partial struct PlayerMovementSystem : ISystem {
         return true;
     }
 
+    [BurstCompile]
     private void UpdatePosition(ref SystemState state, PlayerDataAspect aspect) {
         float3 currentPosition = aspect.transform.ValueRW.Position;
         float3 movement = new float3(aspect.input.ValueRO.currentInput.x, aspect.input.ValueRO.currentInput.y, 0.0f);
@@ -67,6 +78,8 @@ public partial struct PlayerMovementSystem : ISystem {
 
         aspect.transform.ValueRW.Position = result;
     }
+
+    [BurstCompile]
     private void UpdateRotation(ref SystemState state, PlayerDataAspect aspect) {
         float3 distance = (aspect.input.ValueRO.rotationTarget - aspect.transform.ValueRO.Position);
         Vector2 direction = new Vector2(distance.x, distance.y);

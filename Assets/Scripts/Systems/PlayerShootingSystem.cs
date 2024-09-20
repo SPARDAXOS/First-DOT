@@ -16,10 +16,11 @@ public partial class PlayerShootingSystem : SystemBase {
     private NativeArray<Entity> entities;
     private PlayerShootingConfig targetPlayerShootingConfig;
 
-
     private float currentTimer;
 
 
+
+    [BurstCompile]
     protected override void OnCreate() {
         RequireForUpdate<PlayerTag>();
         RequireForUpdate<PlayerShootingConfig>();
@@ -28,6 +29,8 @@ public partial class PlayerShootingSystem : SystemBase {
         currentTimer = 0.0f;
         Debug.Log("On Create! - Player Shooting");
     }
+
+    [BurstCompile]
     protected override void OnDestroy() {
 
         if (entities.IsCreated)
@@ -35,17 +38,16 @@ public partial class PlayerShootingSystem : SystemBase {
 
         Debug.Log("On Destroy! -  Player Shooting");
     }
+
+    [BurstCompile]
     protected override void OnUpdate() {
 
-        //TODO: To func and update all others like this to retrieve the relevant data only when needed
         targetPlayerShootingConfig = SystemAPI.GetSingleton<PlayerShootingConfig>();
 
         if (!entities.IsCreated)
             SetupPool();
         else {
             UpdateShootingTimer();
-
-            //TODO: to func
 
             EntityCommandBuffer buffer = new EntityCommandBuffer(WorldUpdateAllocator);
             foreach (PlayerDataAspect aspect in SystemAPI.Query<PlayerDataAspect>().WithAll<PlayerTag>()) {
@@ -58,10 +60,9 @@ public partial class PlayerShootingSystem : SystemBase {
             }
 
             buffer.Playback(EntityManager);
+            buffer.Dispose();
         }
     }
-
-
 
 
     [BurstCompile]
@@ -81,12 +82,10 @@ public partial class PlayerShootingSystem : SystemBase {
         }
     }
 
-
     [BurstCompile]
     private Entity SpawnBullet(PlayerDataAspect aspect) {
         if (currentTimer > 0.0f)
             return Entity.Null;
-
 
         foreach (var entity in entities) {
             if (!EntityManager.IsEnabled(entity)) {

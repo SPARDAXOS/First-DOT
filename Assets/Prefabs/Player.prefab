@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4623084037194770087}
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maximumHealth: 100
   currentHealth: 100
-  speed: 20
+  speed: 10
 --- !u!114 &3417994579465172308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,9 +143,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6725820616651065674, guid: 3e9092bffb447ff45bd61a6cf864cd85, type: 3}
-  poolSize: 21
-  fireDelay: 0.1
-  spawnPositionOffset: 1.5
+  poolSize: 60
+  fireDelay: 0.01
+  spawnPositionOffset: 0.5
 --- !u!114 &3359433302968703308
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,11 +15,6 @@ public struct PlayerInputData : IComponentData {
 
 
 public class PlayerInputAuthoring : MonoBehaviour {
-
-
-
-
-
     private class Baker : Baker<PlayerInputAuthoring> {
         public override void Bake(PlayerInputAuthoring authoring) {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);

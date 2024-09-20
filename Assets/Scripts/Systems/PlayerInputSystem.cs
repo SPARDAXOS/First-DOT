@@ -10,7 +10,7 @@ using Unity.Jobs;
 
 
 
-
+[BurstCompile]
 public partial struct PlayerInputSystem : ISystem {
 
 
@@ -29,13 +29,17 @@ public partial struct PlayerInputSystem : ISystem {
 
     public InputData currentData;
 
-
+    [BurstCompile]
     void OnCreate(ref SystemState state) {
         state.RequireForUpdate<PlayerInputData>();
     }
+
+    [BurstCompile]
     void OnDestroy(ref SystemState state) {
 
     }
+
+
     void OnUpdate(ref SystemState state) {
         UpdateMovementInput(ref state);
         UpdateRotationInput(ref state);
@@ -44,7 +48,7 @@ public partial struct PlayerInputSystem : ISystem {
     }
 
 
-    [BurstCompile]
+
     private void UpdateRotationInput(ref SystemState state) {
         Vector3 position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10.0f));
         currentData.currentMousePosition = position;
@@ -112,6 +116,7 @@ public partial struct PlayerInputSystem : ISystem {
             Debug.Log("Input system updated!");
         }
 
+        [BurstCompile]
         public void Execute(ref PlayerInputData data) {
             UpdatePlayerData(ref data);
         }

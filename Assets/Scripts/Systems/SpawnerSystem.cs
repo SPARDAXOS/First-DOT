@@ -7,6 +7,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using UnityEngine;
 
+
 [BurstCompile]
 public partial class SpawnerSystem : SystemBase {
 
@@ -14,22 +15,26 @@ public partial class SpawnerSystem : SystemBase {
     private SpawnerSystemConfig targetConfig;
     private BoundsData targetBoundsData;
 
-    private int currentlyActiveEnemies = 0;
     private float currentTimer = 0.0f;
 
 
+    [BurstCompile]
     protected override void OnCreate() {
         RequireForUpdate<SpawnerSystemConfig>();
         RequireForUpdate<BoundsData>();
  
         Debug.Log("On Create! - Spawner");
     }
+
+    [BurstCompile]
     protected override void OnDestroy() {
         Debug.Log("On Destroy! - Spawner");
 
         if (entities.IsCreated)
             entities.Dispose();
     }
+
+    [BurstCompile]
     protected override void OnUpdate() {
         Debug.Log("On Update! - Spawner");
 
@@ -40,11 +45,6 @@ public partial class SpawnerSystem : SystemBase {
             SetupPool();
         else
             UpdateSpawns();
-    }
-
-
-    public void NotifyDispawn() {
-        currentlyActiveEnemies--;
     }
 
     [BurstCompile]
@@ -66,9 +66,6 @@ public partial class SpawnerSystem : SystemBase {
 
     [BurstCompile]
     private void UpdateSpawns() {
-        if (currentlyActiveEnemies == targetConfig.maximumActiveEnemies || currentlyActiveEnemies == entities.Length)
-            return;
-
         if (currentTimer > 0.0f) {
             currentTimer -= SystemAPI.Time.DeltaTime;
             return;
@@ -79,7 +76,6 @@ public partial class SpawnerSystem : SystemBase {
                 RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
                 transform.ValueRW.Position = CalculateSpawnPosition();
                 EntityManager.SetEnabled(entity, true);
-                currentlyActiveEnemies++;
                 break;
             }
         }
@@ -123,5 +119,4 @@ public partial class SpawnerSystem : SystemBase {
 
         return new float3(horizontalPoint, verticalPoint, 0.0f);
     }
-
 }

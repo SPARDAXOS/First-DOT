@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+[BurstCompile]
 public partial struct EnemyControllerSystem : ISystem {
 
     private Entity playerEntity;
@@ -12,17 +14,23 @@ public partial struct EnemyControllerSystem : ISystem {
     private bool playerEntityQueried;
     private bool valid;
 
+
+    [BurstCompile]
     void OnCreate(ref SystemState state) {
         state.RequireForUpdate<EnemyData>();
+        state.RequireForUpdate<EnemyTag>();
         state.RequireForUpdate<PlayerTag>();
 
         Debug.Log("On Create! - EnemyController");
     }
+
+    [BurstCompile]
     void OnDestroy(ref SystemState state) {
         Debug.Log("On Destroy! - EnemyController");
     }
-    void OnUpdate(ref SystemState state) {
 
+    [BurstCompile]
+    void OnUpdate(ref SystemState state) {
         if (!playerEntityQueried)
             QueryPlayerEntity(ref state);
 
@@ -31,32 +39,19 @@ public partial struct EnemyControllerSystem : ISystem {
             return;
         }
 
-        
-
         playerTransform = SystemAPI.GetComponentRO<LocalTransform>(playerEntity);
 
-        foreach (EnemyDataAspect enemy in SystemAPI.Query<EnemyDataAspect>()) {
-            if (!state.EntityManager.IsEnabled(enemy.entity))
-                continue;
+        var updateEnemyMovementJob = new UpdateEnemyMovementJob {
+            deltaTime = SystemAPI.Time.DeltaTime,
+            targetPlayerTransform = playerTransform.ValueRO
+        };
 
-            float3 playerDirection = playerTransform.ValueRO.Position - enemy.transform.ValueRO.Position;
-            math.normalize(playerDirection);
-
-            float3 currentPosition = enemy.transform.ValueRW.Position;
-            enemy.transform.ValueRW.Position = currentPosition + (playerDirection * enemy.data.ValueRO.speed * SystemAPI.Time.DeltaTime);
-        }
-
+        updateEnemyMovementJob.Schedule();
         Debug.Log("On Update! - EnemyController");
     }
 
 
-    private void NotifySpawnerDispawn() {
-        SpawnerSystem system = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<SpawnerSystem>();
-        if (system == null)
-            return;
-
-        system.NotifyDispawn();
-    }
+    [BurstCompile]
     private void QueryPlayerEntity(ref SystemState state) {
         if (playerEntityQueried)
             return;
@@ -68,5 +63,31 @@ public partial struct EnemyControllerSystem : ISystem {
             valid = true;
 
         playerEntityQueried = true;
+    }
+}
+
+
+
+[BurstCompile]
+[WithAll(typeof(EnemyTag))]
+public partial struct UpdateEnemyMovementJob : IJobEntity {
+
+    public LocalTransform targetPlayerTransform;
+    public float deltaTime;
+
+
+    [BurstCompile]
+    private void UpdateEnemyData(ref EnemyDataAspect data) {
+
+        float3 playerDirection = targetPlayerTransform.Position - data.transform.ValueRO.Position;
+        math.normalize(playerDirection);
+
+        float3 currentPosition = data.transform.ValueRW.Position;
+        data.transform.ValueRW.Position = currentPosition + (playerDirection * data.data.ValueRO.speed * deltaTime);
+    }
+
+    [BurstCompile]
+    public void Execute(EnemyDataAspect data) {
+        UpdateEnemyData(ref data);
     }
 }

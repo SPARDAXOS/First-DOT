@@ -7,42 +7,37 @@ using Unity.Transforms;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Burst;
+using System;
+using Unity.Collections;
 
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
+[BurstCompile]
 public partial class CollisionTriggerSystem : SystemBase {
 
-
-    private EndSimulationEntityCommandBufferSystem.Singleton endSimulationECBSystem;
-
+    [BurstCompile]
     protected override void OnCreate() {
 
-
-        Debug.Log("On Create! - CollisionTriggerSystem");
     }
+
+    [BurstCompile]
     protected override void OnDestroy() {
 
-        Debug.Log("On Destroy! - CollisionTriggerSystem");
     }
+
+    [BurstCompile]
     protected override void OnUpdate() {
 
-        endSimulationECBSystem = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-        PhysicsWorldSingleton physicsWorldSingleton = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
-        //Simulation simulation = SystemAPI.GetSingleton<SimulationSingleton>().AsSimulation();
-
+        var endSimulationECBSystem = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
         var bulletEnemyJob = new BulletEnemyCollisionJob {
             allPlayerProjectiles = GetComponentLookup<PlayerProjectileTag>(false),
             allEnemies = GetComponentLookup<EnemyTag>(false),
             ECB = endSimulationECBSystem.CreateCommandBuffer(World.Unmanaged),
-            world = World
         };
-
+        
         Dependency = bulletEnemyJob.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), Dependency);
-
-        Debug.Log("On Update! - CollisionTriggerSystem");
     }
-
 }
 
 
@@ -52,8 +47,6 @@ public partial struct BulletEnemyCollisionJob : ITriggerEventsJob {
     public ComponentLookup<PlayerProjectileTag> allPlayerProjectiles;
     public ComponentLookup<EnemyTag> allEnemies;
     public EntityCommandBuffer ECB;
-
-    public World world; //This is a problem. either i fix it or i attempt to change how the spawner works.
 
     [BurstCompile]
     public void Execute(TriggerEvent triggerEvent) {
@@ -66,20 +59,12 @@ public partial struct BulletEnemyCollisionJob : ITriggerEventsJob {
 
         if (allPlayerProjectiles.HasComponent(entityA) && allEnemies.HasComponent(entityB)) { // Projectile/Enemy
             ECB.SetEnabled(entityA, false);
-            SpawnerSystem system = world.GetExistingSystemManaged<SpawnerSystem>();
-            if (system != null) {
-                system.NotifyDispawn();
-            }
             ECB.SetEnabled(entityB, false);
         }
         else if (allEnemies.HasComponent(entityA) && allPlayerProjectiles.HasComponent(entityB)) { // Enemy/Projectile
             ECB.SetEnabled(entityA, false);
-            SpawnerSystem system = world.GetExistingSystemManaged<SpawnerSystem>();
-            if (system != null) {
-                system.NotifyDispawn();
-            }
-
             ECB.SetEnabled(entityB, false);
         }
     }
 }
+
